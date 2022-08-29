@@ -17,7 +17,6 @@ from django.contrib import admin
 from django.urls import path, re_path, include
 from django.conf import settings
 from django.views.static import serve
-from apps import user
 
 
 urlpatterns = [
