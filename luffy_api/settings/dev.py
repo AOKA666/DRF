@@ -28,9 +28,14 @@ SECRET_KEY = 'django-insecure-^u1b-y$maa_=iw%d0*n^h1$oem+sxtnq^z=9&bz+-7a*!&u=*d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
-
+# CORS组的配置信息
+CORS_ORIGIN_WHITELIST = (
+	'http://127.0.0.1:8080',
+)
+CORS_ALLOW_CREDENTIALS = False  # 允许ajax跨域请求时携带cookie
+CORS_ALLOW_ALL_ORIGINS = True
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,11 +46,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
     'user',
     'home'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
