@@ -1,3 +1,4 @@
 .idea/
 logs/
 *.pyc
+luffy_api/**/migrations/*
