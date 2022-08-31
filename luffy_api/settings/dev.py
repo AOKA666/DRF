@@ -32,7 +32,7 @@ ALLOWED_HOSTS = ["*"]
 
 # CORS组的配置信息
 CORS_ORIGIN_WHITELIST = (
-	'http://127.0.0.1:8080',
+    'http://127.0.0.1:8080',
 )
 CORS_ALLOW_CREDENTIALS = False  # 允许ajax跨域请求时携带cookie
 CORS_ALLOW_ALL_ORIGINS = True
@@ -194,5 +194,12 @@ LOGGING = {
 }
 
 REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': 'luffy_api.utils.exceptions.exception_handler'
+    'EXCEPTION_HANDLER': 'luffy_api.utils.exceptions.exception_handler',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
+
+AUTHENTICATION_BACKENDS = [
+    'user.utils.UsernameMobileAuthBackend',
+]
