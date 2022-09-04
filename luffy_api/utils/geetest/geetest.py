@@ -33,14 +33,14 @@ def check_bypass_status():
         except Exception as e:
             print(e)
         if response and response.status_code == 200:
-            print(response.content)
+            # print(response.content)
             bypass_status_str = response.content.decode("utf-8")
             bypass_status = json.loads(bypass_status_str).get("status")
             redis_connect.set(GEETEST_BYPASS_STATUS_KEY, bypass_status)
         else:
             bypass_status = "fail"
             redis_connect.set(GEETEST_BYPASS_STATUS_KEY, bypass_status)
-        print("bypass状态已经获取并存入redis，当前状态为-{}".format(bypass_status))
+        # print("bypass状态已经获取并存入redis，当前状态为-{}".format(bypass_status))
         time.sleep(CYCLE_TIME)
 
 
@@ -51,11 +51,9 @@ def get_bypass_cache():
     return bypass_status
 
 
-if __name__ == "__main__":
+def run_thread():
     thread = threading.Thread(target=check_bypass_status)
     thread.start()
-    app.secret_key = GeetestLib.VERSION
-    app.run(host="0.0.0.0", port=5000, debug=True)
 
 
 
