@@ -1,19 +1,6 @@
-import random
-from django_redis import get_redis_connection
-
-
-# def send_code():
-#     code = random.randint(1000, 9999)
-#     print(code)
-#     # 建立redis连接
-#     conn = get_redis_connection("default")
-#     # 设置键值
-#     conn.set('code', code, 60)
-
-
-from qcloudsms_py import SmsMultiSender, SmsSingleSender
+from qcloudsms_py import SmsSingleSender
 from qcloudsms_py.httpclient import HTTPError
-from settings.dev import SMS_APP_ID, SMS_APP_KEY
+from luffy_api.settings.dev import SMS_APP_ID, SMS_APP_KEY
 
 
 def send_sms_single(phone_num, template_id, template_param_list):

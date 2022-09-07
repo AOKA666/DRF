@@ -1,8 +1,9 @@
 import random
 from rest_framework.views import APIView
+from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import MyTokenObtainPairSerializer
+from .serializers import MyTokenObtainPairSerializer, RegisterSerializer
 from django_redis import get_redis_connection
 from rest_framework import status
 from luffy_api.utils.geetest.geetest import get_bypass_cache, run_thread
@@ -10,6 +11,8 @@ from luffy_api.utils.geetest.sdk.geetest_lib import GeetestLib
 from luffy_api.utils.geetest.geetest_config import GEETEST_ID, GEETEST_KEY
 from .utils import get_user
 from luffy_api.utils.sms import send_sms_single
+from . import models
+from luffy_api.my_celery.sms.tasks import send_sms
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -55,7 +58,8 @@ class GeetestAPIView(APIView):
 
 class SendSMSAPIView(APIView):
     def get(self, request):
-        mobile = request.query_params.get("username")
+        mobile = request.query_params.get("telephone")
+        print(request.query_params)
         if get_user(mobile):
             return Response({"status": False, "msg": "手机号已注册！"}, status=status.HTTP_400_BAD_REQUEST)
         conn = get_redis_connection("sms_code")
@@ -63,9 +67,11 @@ class SendSMSAPIView(APIView):
         if ret:
             return Response({"status": False, "msg": "对不起，60秒内不能重复发送！"}, status=status.HTTP_400_BAD_REQUEST)
         code = random.randint(1000, 9999)
-        sms = send_sms_single(mobile, '1445434', [code, ])
-        if sms['result'] != 0:
-            return Response({"status": False, "msg": "短信发送失败"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        conn.set(mobile, code, 60)
+        send_sms.delay(mobile, [code, ])
+        return Response({"status": True})     
 
-        return Response({"status": True})
+
+
+class RegisterAPIView(CreateAPIView):
+    queryset = models.User.objects.all()
+    serializer_class = RegisterSerializer

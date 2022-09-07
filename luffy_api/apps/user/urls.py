@@ -1,7 +1,7 @@
-from django.urls import path, re_path
+from django.urls import path
 from rest_framework_simplejwt.views import TokenVerifyView
 
-from .views import MyTokenObtainPairView, GeetestAPIView, SendSMSAPIView
+from .views import MyTokenObtainPairView, GeetestAPIView, SendSMSAPIView, RegisterAPIView
 
 
 urlpatterns = [
@@ -11,5 +11,7 @@ urlpatterns = [
     # 行为验证
     path('geetest/', GeetestAPIView.as_view()),
     # 发送短信验证码
-    re_path(r'^send/sms/$', SendSMSAPIView.as_view()),
+    path('send/sms/', SendSMSAPIView.as_view()),
+    # 注册
+    path('register/', RegisterAPIView.as_view())
 ]
